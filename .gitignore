@@ -1,0 +1,10 @@
+node_modules
+build
+coverage
+.nyc_output
+tmp
+.vscode/*
+!.vscode/launch.json
+.DS_STORE
+.env
+.env.docker
