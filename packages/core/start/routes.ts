@@ -18,21 +18,31 @@
 |
 */
 
+import Env from '@ioc:Adonis/Core/Env'
 import Route from '@ioc:Adonis/Core/Route'
 
+let authorizationMiddleware = 'auth'
+const useKeyCloak = Env.get('USE_KEYCLOAK')
+
+if (useKeyCloak) {
+  authorizationMiddleware = 'keycloak'
+}
+
 Route.resource('questions', 'QuestionsController').apiOnly().middleware({
-  store: 'auth',
-  update: 'auth',
-  destroy: 'auth',
+  store: authorizationMiddleware,
+  update: authorizationMiddleware,
+  destroy: authorizationMiddleware,
 })
 
 Route.resource('questions.answers', 'AnswersController').apiOnly().middleware({
-  store: 'auth',
-  update: 'auth',
-  destroy: 'auth',
+  store: authorizationMiddleware,
+  update: authorizationMiddleware,
+  destroy: authorizationMiddleware,
 })
 
 Route.resource('registration', 'RegistrationsController').only(['store'])
 
-Route.post('auth/login', 'AuthController.login')
-Route.get('auth/logout', 'AuthController.logout').middleware('auth')
+if (!useKeyCloak) {
+  Route.post('auth/login', 'AuthController.login')
+  Route.get('auth/logout', 'AuthController.logout').middleware('auth')
+}

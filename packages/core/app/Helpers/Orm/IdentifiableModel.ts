@@ -9,6 +9,8 @@ export default class IdentifiableModel extends BaseModel {
 
   @beforeCreate()
   public static async createUUID(identifiableModel: IdentifiableModel) {
-    identifiableModel.id = uuid()
+    if (!identifiableModel.id) {
+      identifiableModel.id = uuid()
+    }
   }
 }

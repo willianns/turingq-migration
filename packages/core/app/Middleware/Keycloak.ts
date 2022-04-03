@@ -11,7 +11,7 @@ class KeycloakMiddleware {
   }
 
   public async handle({ request, response }: HttpContextContract, next: () => Promise<void>) {
-    let token: string = request.header('Authorization')
+    let token = request.header('Authorization')
 
     if (token) {
       const formattedTokenSignaturePublicKey = `-----BEGIN PUBLIC KEY-----\r\n${this.tokenSignaturePublicKey}\r\n-----END PUBLIC KEY-----`
@@ -40,6 +40,5 @@ class KeycloakMiddleware {
     response.unauthorized({ error: 'Token not present' })
   }
 }
-
 
 export default KeycloakMiddleware

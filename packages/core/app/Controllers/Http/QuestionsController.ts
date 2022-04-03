@@ -39,14 +39,14 @@ export default class QuestionsController {
   }
 
   public async store({ auth, request, response }: HttpContextContract) {
-    const userId = auth.use('api').user!.id
+    const userId = this.getUserId(auth, request)
     const question = await this.save(request, userId)
     Event.emit('new:question', question)
     return response.created(question.toJSON())
   }
 
   public async update({ auth, request, response }: HttpContextContract) {
-    const userId = auth.use('api').user!.id
+    const userId = this.getUserId(auth, request)
     let questionInDb = await Question.find(request.param('id'))
     let responseMethod = 'ok'
 
@@ -60,8 +60,8 @@ export default class QuestionsController {
     return response[responseMethod](question.toJSON())
   }
 
-  public async destroy({ auth, params, response }: HttpContextContract) {
-    const userId = auth.use('api').user!.id
+  public async destroy({ auth, params, request, response }: HttpContextContract) {
+    const userId = this.getUserId(auth, request)
     const question = await Question.findOrFail(params.id)
     if (question.authorId !== userId) {
       return response.unauthorized({ error: 'You cannot remove a question from another author' })
@@ -81,5 +81,15 @@ export default class QuestionsController {
     questionToSave.body = string.escapeHTML(payload.body)
 
     return questionToSave.save()
+  }
+
+  private getUserId(auth, request) {
+    const useKeycloak = Env.get('USE_KEYCLOAK')
+
+    if (useKeycloak) {
+      return request['user'].id
+    } else {
+      return auth.use('api').user!.id
+    }
   }
 }
