@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: authorizer-deployment
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: authorizer
+  replicas: 1
+
+  # Pod
+  template:
+    metadata:
+      labels:
+        app: authorizer
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: authorizer-configmap
+        - secretRef:
+            name: authorizer-secret
+        name: authorizer
+        image: quay.io/keycloak/keycloak:15.0.2
