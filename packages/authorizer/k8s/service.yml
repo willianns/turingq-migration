@@ -11,9 +11,9 @@ spec:
 
   ports:
     - name: http
+      # nodePort a utilizar
+      nodePort: 30000
       # porta do service
       port: 8080
       # port do container
       targetPort: 8080
-      # nodePort a utilizar
-      nodePort: 30000
