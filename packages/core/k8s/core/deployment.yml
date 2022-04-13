@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: core-deployment
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: core
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: core
+    spec:
+      containers:
+        - envFrom:
+          - configMapRef:
+              name: core-configmap
+          - secretRef:
+              name: core-secret
+          name: core
+          image: localhost:5000/turingq-core
+          imagePullPolicy: IfNotPresent
+      initContainers:
+        - envFrom:
+          - configMapRef:
+              name: core-configmap
+          - secretRef:
+              name: core-secret
+          name: core-migrate-db
+          image: localhost:5000/turingq-core
+          command: ['node', 'ace', 'migration:run', '--force']

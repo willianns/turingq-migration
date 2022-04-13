@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: core-service
+  namespace: default
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      port: 3001
+      targetPort: 3001
+      nodePort: 30001
+  selector:
+    app: core
