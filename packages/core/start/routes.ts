@@ -28,21 +28,23 @@ if (useKeyCloak) {
   authorizationMiddleware = 'keycloak'
 }
 
-Route.resource('questions', 'QuestionsController').apiOnly().middleware({
-  store: authorizationMiddleware,
-  update: authorizationMiddleware,
-  destroy: authorizationMiddleware,
-})
+Route.group(() => {
+  Route.resource('questions', 'QuestionsController').apiOnly().middleware({
+    store: authorizationMiddleware,
+    update: authorizationMiddleware,
+    destroy: authorizationMiddleware,
+  })
 
-Route.resource('questions.answers', 'AnswersController').apiOnly().middleware({
-  store: authorizationMiddleware,
-  update: authorizationMiddleware,
-  destroy: authorizationMiddleware,
-})
+  Route.resource('questions.answers', 'AnswersController').apiOnly().middleware({
+    store: authorizationMiddleware,
+    update: authorizationMiddleware,
+    destroy: authorizationMiddleware,
+  })
 
-Route.resource('registration', 'RegistrationsController').only(['store'])
+  Route.resource('registration', 'RegistrationsController').only(['store'])
 
-if (!useKeyCloak) {
-  Route.post('auth/login', 'AuthController.login')
-  Route.get('auth/logout', 'AuthController.logout').middleware('auth')
-}
+  if (!useKeyCloak) {
+    Route.post('auth/login', 'AuthController.login')
+    Route.get('auth/logout', 'AuthController.logout').middleware('auth')
+  }
+}).prefix('/api')

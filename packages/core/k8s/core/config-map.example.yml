@@ -24,6 +24,6 @@
 #   KEYCLOAK_AUTH_SERVER_URL: 'http://authorizer-service:8080/auth'
 #   KEYCLOAK_CLIENT_ID: 'turingq-core-client'
 #   KEYCLOAK_REALM: 'turingq'
-#   # Public key de assinatura definida no keycloak
+#   # Public key de assinatura definida no keycloak - (Realm Settings > Keys > RS256 > SIG > Public key)
 #   KEYCLOAK_REALM_TOKEN_SIGNATURE_PUBLIC_KEY: 'please-find-me-on-keycloak'
 #   USE_KEYCLOAK: 'true'
