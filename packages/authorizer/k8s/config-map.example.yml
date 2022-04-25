@@ -5,3 +5,6 @@
 #   namespace: default
 # data:
 #   KEYCLOAK_PORT: '8080'
+#   DB_VENDOR: POSTGRES
+#   DB_ADDR: authorizer-postgres-service
+#   DB_DATABASE: keycloak
