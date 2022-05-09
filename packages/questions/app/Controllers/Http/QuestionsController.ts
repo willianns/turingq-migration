@@ -7,6 +7,7 @@ import { string } from '@ioc:Adonis/Core/Helpers'
 import QuestionValidator from 'App/Validators/QuestionValidator'
 import PaginationValidator from 'App/Validators/PaginationValidator'
 import Question from 'App/Models/Question'
+import AuthorHandler from 'App/Helpers/Http/AuthorHandler'
 
 // TODO: add missing tests
 export default class QuestionsController {
@@ -38,32 +39,39 @@ export default class QuestionsController {
     return question.toJSON()
   }
 
-  public async store({ auth, request, response }: HttpContextContract) {
-    const userId = this.getUserId(auth, request)
-    const question = await this.save(request, userId)
+  public async store({ request, response }: HttpContextContract) {
+    // already in the request
+    const user = request['user']
+    // Based on the current logged user
+    await AuthorHandler.processAuthor(user)
+
+    const question = await this.save(request, user.id)
     Event.emit('new:question', question)
     return response.created(question.toJSON())
   }
 
-  public async update({ auth, request, response }: HttpContextContract) {
-    const userId = this.getUserId(auth, request)
+  public async update({ request, response }: HttpContextContract) {
+    const user = request['user']
+    await AuthorHandler.processAuthor(user)
+
     let questionInDb = await Question.find(request.param('id'))
     let responseMethod = 'ok'
 
     if (questionInDb === null) {
       responseMethod = 'created'
-    } else if (questionInDb.authorId !== userId) {
+    } else if (questionInDb.authorId !== user.id) {
       return response.unauthorized({ error: 'You cannot update a question from another author' })
     }
 
-    const question = await this.save(request, userId, questionInDb)
+    const question = await this.save(request, user.id, questionInDb)
     return response[responseMethod](question.toJSON())
   }
 
-  public async destroy({ auth, params, request, response }: HttpContextContract) {
-    const userId = this.getUserId(auth, request)
+  public async destroy({ params, request, response }: HttpContextContract) {
+    const user = request['user']
+
     const question = await Question.findOrFail(params.id)
-    if (question.authorId !== userId) {
+    if (question.authorId !== user.id) {
       return response.unauthorized({ error: 'You cannot remove a question from another author' })
     }
     await question.delete()
@@ -81,15 +89,5 @@ export default class QuestionsController {
     questionToSave.body = string.escapeHTML(payload.body)
 
     return questionToSave.save()
-  }
-
-  private getUserId(auth, request) {
-    const useKeycloak = Env.get('USE_KEYCLOAK')
-
-    if (useKeycloak) {
-      return request['user'].id
-    } else {
-      return auth.use('api').user!.id
-    }
   }
 }
