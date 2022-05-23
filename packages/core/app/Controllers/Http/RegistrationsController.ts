@@ -7,7 +7,6 @@ import KeyCloakAdminClient from '@keycloak/keycloak-admin-client'
 
 export default class RegistrationsController {
   public async store({ request, response }: HttpContextContract) {
-    const useKeycloak = Env.get('USE_KEYCLOAK')
     const payload = await request.validate(RegistrationValidator)
 
     const user = new User()
@@ -15,15 +14,13 @@ export default class RegistrationsController {
     user.email = payload.email
     user.password = payload.password
 
-    if (useKeycloak) {
-      const keycloakUser = await this.createKeycloakUser(
-        payload.name,
-        payload.email,
-        payload.password
-      )
+    const keycloakUser = await this.createKeycloakUser(
+      payload.name,
+      payload.email,
+      payload.password
+    )
 
-      user.id = keycloakUser.id;
-    }
+    user.id = keycloakUser.id;
 
     await user.save()
 

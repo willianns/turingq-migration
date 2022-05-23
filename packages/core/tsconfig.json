@@ -31,9 +31,7 @@
       "@adonisjs/core",
       "@adonisjs/repl",
       "@adonisjs/shield",
-      "@adonisjs/lucid",
-      "@adonisjs/auth",
-      "@adonisjs/mail"
+      "@adonisjs/lucid"
     ]
   }
 }
