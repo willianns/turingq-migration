@@ -22,7 +22,6 @@ const setAuthorizationToken = (
 
 ApiService.interceptors.request.use(
   (config): AxiosRequestConfig | Promise<AxiosRequestConfig> => {
-
     if (!keycloakClient.authenticated) {
       return config;
     }
