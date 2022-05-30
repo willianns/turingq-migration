@@ -64,6 +64,6 @@ After that you need to deploy keycloak authorizer
 
 1. After that generate the client secret for the micro-services accessing http://localhost:9090/auth/
 2. Verify that KEYCLOAK_REALM_TOKEN_SIGNATURE_PUBLIC_KEY inside the micro-services config-maps and .env are set correctly according to RS256/SIG public key
-3. Generate the client-secret for the clients (backend)
+3. Generate the client-secret for the clients (backend) an put inside .env and secrets (base64 encoded *caution with new line character)
 
 Deploy the other services (see the npm tasks available) in package.json
