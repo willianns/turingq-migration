@@ -20,6 +20,7 @@
     "docker:prepare-local-image:frontend": "run-s docker:build:frontend docker:local:tag:frontend docker:local:push:frontend",
     "docker:prepare-local-image:questions": "run-s docker:build:questions docker:local:tag:questions docker:local:push:questions",
     "kubernetes:setup:authorizer": "kubectl apply -f packages/authorizer/k8s/database -f packages/authorizer/k8s -f packages/authorizer/k8s/authorizer-config",
+    "kubernetes:setup:message-broker": "kubectl apply -f packages/message-broker/k8s",
     "kubernetes:setup:core": "kubectl apply -f packages/core/k8s/core -f packages/core/k8s/database",
     "kubernetes:setup:frontend": "kubectl apply -f packages/frontend/k8s",
     "kubernetes:setup:questions": "kubectl apply -f packages/questions/k8s/database -f packages/questions/k8s/questions",
