@@ -27,11 +27,6 @@ export default Env.rules({
   PG_USER: Env.schema.string(),
   PG_PASSWORD: Env.schema.string.optional(),
   PG_DB_NAME: Env.schema.string(),
-  KEYCLOAK_CLIENT_ID: Env.schema.string(),
-  KEYCLOAK_CLIENT_SECRET: Env.schema.string(),
-  KEYCLOAK_AUTH_SERVER_URL: Env.schema.string(),
-  KEYCLOAK_REALM: Env.schema.string(),
-  KEYCLOAK_REALM_TOKEN_SIGNATURE_PUBLIC_KEY: Env.schema.string(),
   RABBITMQ_CONNECTION_USER: Env.schema.string(),
   RABBITMQ_CONNECTION_PASSWORD: Env.schema.string(),
   RABBITMQ_CONNECTION_HOST: Env.schema.string({ format: 'host' }),
@@ -40,5 +35,10 @@ export default Env.rules({
   RABBITMQ_SUBSCRIPTIONS_REGISTRATION_QUEUE_NAME: Env.schema.string(),
   RABBITMQ_SUBSCRIPTIONS_REGISTRATION_BINDING_KEY: Env.schema.string(),
   RABBITMQ_SUBSCRIPTIONS_NEW_ANSWER_QUEUE_NAME: Env.schema.string(),
-  RABBITMQ_SUBSCRIPTIONS_NEW_ANSWER_BINDING_KEY: Env.schema.string(),
+  RABBITMQ_SUBSCRIPTIONS_NEW_ANSWER_BINDING_KEY: Env.schema.string(),  
+  // SMTP_HOST: Env.schema.string({ format: 'host' }),
+  // SMTP_PORT: Env.schema.number(),
+  // SMTP_USERNAME: Env.schema.string(),
+  // SMTP_PASSWORD: Env.schema.string(),
+  // MAIL_FROM: Env.schema.string({ format: 'email' })
 })

@@ -22,6 +22,17 @@
       "sourceMaps": true,
       "address": "localhost",
       "port": 9232
+    },
+    {
+      "type": "node",
+      "name": "ITuring Debugger - Subscriptions - Process Attach",
+      "request": "attach",
+      "protocol": "inspector",
+      "restart": true,
+      "skipFiles": ["<node_internals>/**"],
+      "sourceMaps": true,
+      "address": "localhost",
+      "port": 9233
     }
   ]
 }

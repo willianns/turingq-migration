@@ -1,15 +1,15 @@
 version: '3'
 
 services:
-  questions-database:
+  subscriptions-database:
     image: postgres:13-alpine
-    container_name: turingq-questions-database
+    container_name: turingq-subscriptions-database
     restart: always
     environment:
       POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_DB: ${PG_DB_NAME}
     volumes:
-      - turingq-questions-db-data:/var/lib/postgresql/data
+      - turingq-subscriptions-db-data:/var/lib/postgresql/data
       - ./db-init:/docker-entrypoint-initdb.d
     ports:
       - ${PG_PORT}:5432
@@ -23,7 +23,7 @@ services:
 
 networks:
   turingq-messages:
-    driver: bridge
+    driver: bridge      
 
 volumes:
-  turingq-questions-db-data:
+  turingq-subscriptions-db-data:

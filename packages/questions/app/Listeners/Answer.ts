@@ -1,29 +1,28 @@
-import Env from '@ioc:Adonis/Core/Env'
-import Mail from '@ioc:Adonis/Addons/Mail'
 import { EventsList } from '@ioc:Adonis/Core/Event'
 
-import Subscription from 'App/Models/Subscription'
-import Question from 'App/Models/Question'
-import Author from 'App/Models/Author'
+import AmqpListener from './AmqpListener'
 
-export default class Answer {
-  public async onNewAnswer(answer: EventsList['new:answer']) {
-    const question = await Question.findOrFail(answer.questionId)
+export default class Answer extends AmqpListener {
+  public async onNewAnswer(answerModel: EventsList['new:answer']) {
+    await answerModel.load('question')
+    const answer = answerModel.toJSON()
+    this.alertSubscriptions(answer, answer.question)
+  }
 
-    const subscribedUsers = (
-      await Subscription.query().select('user_id').where('question_id', '=', question.id)
-    ).map((subscription: Subscription) => subscription.userId)
-
-    const users = await Author.query().whereIn('id', subscribedUsers)
-
-    for (const user of users) {
-      await Mail.sendLater((message) => {
-        message
-          .from(Env.get('MAIL_FROM'))
-          .to(user.email)
-          .subject('There is a new answer for a question you are subscribed!')
-          .text(`Question: ${question.title}.\n\nAnswer: ${answer.body}`)
-      })
+  private alertSubscriptions(answer: Record<string, unknown>, question: Record<string, unknown>) {
+    // Payload contract to send through the message
+    const messageContent = {
+      question: {
+        id: question.id,
+        title: question.title,
+      },
+      answer: {
+        id: answer.id,
+        body: answer.body,
+      },
     }
+
+    // Send the message addressed to new:answer
+    this.publishMessage('new:answer', messageContent)
   }
 }
